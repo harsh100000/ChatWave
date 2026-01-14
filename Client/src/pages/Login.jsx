@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,17 +6,24 @@ import { toast } from "react-toastify";
 import { RiEyeFill, RiEyeOffFill } from "@remixicon/react";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userInfo"))
+    if(user) navigate('/chats')
+  }, [navigate])
+  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const user = { email, password };
-      const response = await axios.post("http://127.0.0.1:3000/api/user/login", user);
+      const {data} = await axios.post("http://127.0.0.1:3000/api/user/login", user);
+      localStorage.setItem('userInfo', JSON.stringify(data))
       navigate("/chats");
     } catch (error) {
       console.log("Error", error.response.data.message);
@@ -137,3 +144,4 @@ const Login = () => {
 };
 
 export default Login;
+

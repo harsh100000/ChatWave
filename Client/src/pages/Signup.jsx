@@ -11,8 +11,41 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
+
+  const uploadPic = (pic) =>{
+    setLoading(true)
+    if(pic === undefined)
+    {
+      alert("Upload a picture")
+    }
+    if(pic.type === "image/jpeg" || "image/png" || "image/jpg" || "image/jfif"){
+      const data = new FormData();
+      data.append("file", pic)
+      data.append("upload_preset", "chat-app")
+      data.append("cloud_name", "dtng8fbnf")
+      fetch("https://api.cloudinary.com/v1_1/dtng8fbnf/image/upload", {
+        method: "post",
+        body: data
+      })
+      .then((res) => res.json())
+      .then((data) =>{
+        setProfilePicture(data.url.toString());
+        setLoading(false)
+      })
+      .catch((err)=>{
+        console.log(err);
+        setLoading(false)
+      })
+    }
+    else{
+      console.log("Image type not allowed, only JPG, JPEG and PNG allowed");
+      setLoading(false)
+      return;
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +58,8 @@ const Signup = () => {
       user = { name, email, password, profilePicture };
     }
     try {
-      const response = await axios.post("http://127.0.0.1:3000/api/user/signup", user);
+      const {data} = await axios.post("http://127.0.0.1:3000/api/user/signup", user);
+      localStorage.setItem('userInfo', JSON.stringify(data))
       navigate("/chats");
     } catch (error) {
       console.log(error);
@@ -38,7 +72,7 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <div className="overflow-y-auto">
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <Link
@@ -141,8 +175,8 @@ const Signup = () => {
                     type="file"
                     name="profilePicture"
                     id="profilePicture"
-                    value={profilePicture}
-                    onChange={(e) => setProfilePicture(e.target.value)}
+                    accept="image/*"
+                    onChange={(e) => uploadPic(e.target.files[0])}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
                 </div>
@@ -174,9 +208,10 @@ const Signup = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  disabled={loading ? true: false}
+                  className={`w-full text-white bg-blue-600 ${loading?"cursor-not-allowed bg-gray-400":""} hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800`}
                 >
-                  Create an account
+                  {loading ? "Loading" : "Create an account"}
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Already have an account?{" "}
@@ -197,3 +232,4 @@ const Signup = () => {
 };
 
 export default Signup;
+

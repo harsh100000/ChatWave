@@ -1,26 +1,20 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { ChatState } from '../../Context/ChatProvider'
+import SideDrawer from '../components/miscellaneous/SideDrawer'
+import MyChats from '../components/MyChats'
+import ChatBox from '../components/ChatBox'
 
 const ChatPage = () => {
-  const [chats, setChats] = useState([])
-  
-  const fetchChats = async () =>{
-    const {data} = await axios.get("http://127.0.0.1:3000/api/chats")
-    setChats(data)
-  }
-
-  useEffect(() => {
-    fetchChats()
-  }, [])
-  
+  const {user} = ChatState()
+  const [fetchAgain, setFetchAgain] = useState(false)
 
   return (
-    <div>
-      {
-        chats.map((chat) =>(
-          <p key={chat._id}>{chat.chatName}</p>
-        ))
-      }
+    <div className='w-full'>
+      {user && <SideDrawer/>}
+      <div className='flex justify-between gap-2 w-full h-[91.5vh] p-3'>
+        {user && (<MyChats fetchAgain={fetchAgain}/>)}
+        {user && (<ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />)}
+      </div>
     </div>
   )
 }
