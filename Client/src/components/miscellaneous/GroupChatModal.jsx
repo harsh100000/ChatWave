@@ -3,6 +3,7 @@ import { ChatState } from "../../../Context/ChatProvider";
 import { toast } from "react-toastify";
 import UserListItem from "../UserAvatar/UserListItem";
 import axios from "axios";
+import { API_URL } from "../../config/api"
 
 const GroupChatModal = ({ children }) => {
   const [groupChatModalOpen, setGroupChatModalOpen] = useState(false);
@@ -24,7 +25,7 @@ const GroupChatModal = ({ children }) => {
         },
       };
       const { data } = await axios.get(
-        `http://localhost:3000/api/user/login?search=${search}`,
+        `${API_URL}/api/user/login?search=${search}`,
         config
       );
       setLoading(false);
@@ -46,7 +47,7 @@ const GroupChatModal = ({ children }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const {data} = await axios.post("http://localhost:3000/api/chat/group", 
+      const {data} = await axios.post(`${API_URL}/api/chat/group`, 
         {
           name: groupChatName,
           users: JSON.stringify(selectedUsers.map((u)=>u._id))

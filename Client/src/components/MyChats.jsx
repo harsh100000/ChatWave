@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { getSender, getSenderFull } from "../config/ChatLogic";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
+import { API_URL } from "../config/api";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -17,7 +18,7 @@ const MyChats = ({ fetchAgain }) => {
         },
       };
       const { data } = await axios.get(
-        "http://127.0.0.1:3000/api/chat",
+        `${API_URL}/api/chat`,
         config
       );
       setChats(data);

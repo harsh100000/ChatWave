@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import ProfileModal from "./ProfileModal";
 import { getSender } from "../../config/ChatLogic";
+import { API_URL } from "../../config/api";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -40,7 +41,7 @@ const SideDrawer = () => {
       };
 
       const { data } = await axios.post(
-        "http://localhost:3000/api/chat",
+        `${API_URL}/api/chat`,
         { userId },
         config
       );
@@ -62,7 +63,7 @@ const SideDrawer = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:3000/api/user/login?search=${search}`,
+        `${API_URL}/api/user/login?search=${search}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { RiEyeFill, RiEyeOffFill } from "@remixicon/react";
 import { ChatState } from "../../Context/ChatProvider";
 import ChatWaveLogo from "../assets/ChatWaveLogo.png"
+import { API_URL } from "../config/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const user = { email, password };
-      const {data} = await axios.post("http://127.0.0.1:3000/api/user/login", user);
+      const {data} = await axios.post(`${API_URL}/api/user/login`, user);
       localStorage.setItem('userInfo', JSON.stringify(data))
       setUser(data);
       navigate("/chats");

@@ -3,6 +3,7 @@ import { ChatState } from "../../../Context/ChatProvider";
 import { toast } from "react-toastify";
 import UserListItem from "../UserAvatar/UserListItem";
 import axios from "axios";
+import { API_URL } from "../../config/api";
 
 const UpdateGroupChatModal = ({ children, fetchAgain, setFetchAgain, fetchMessages }) => {
   const [updateGroupChatModal, setUpdateGroupChatModal] = useState(false);
@@ -25,7 +26,7 @@ const UpdateGroupChatModal = ({ children, fetchAgain, setFetchAgain, fetchMessag
           Authorization: `Bearer ${user.token}`
         }
       }
-      const {data} = await axios.put("http://127.0.0.1:3000/api/chat/groupremove",
+      const {data} = await axios.put(`${API_URL}/api/chat/groupremove`,
         {
           chatId:selectedChat._id,
           userId: userToRemove._id
@@ -60,7 +61,7 @@ const UpdateGroupChatModal = ({ children, fetchAgain, setFetchAgain, fetchMessag
           Authorization: `Bearer ${user.token}`
         }
       }
-      const {data} = await axios.put("http://127.0.0.1:3000/api/chat/groupadd",
+      const {data} = await axios.put(`${API_URL}/api/chat/groupadd`,
         {
           chatId:selectedChat._id,
           userId: userToAdd._id
@@ -89,7 +90,7 @@ const UpdateGroupChatModal = ({ children, fetchAgain, setFetchAgain, fetchMessag
         },
       };
       const { data } = await axios.get(
-        `http://localhost:3000/api/user/login?search=${search}`,
+        `${API_URL}/api/user/login?search=${search}`,
         config
       );
       setLoading(false);
@@ -109,7 +110,7 @@ const UpdateGroupChatModal = ({ children, fetchAgain, setFetchAgain, fetchMessag
         },
       };
       const { data } = await axios.put(
-        "http://127.0.0.1:3000/api/chat/rename",
+        `${API_URL}/api/chat/rename`,
         {
           chatId: selectedChat._id,
           chatName: groupChatName,

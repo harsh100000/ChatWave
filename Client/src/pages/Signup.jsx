@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { RiEyeFill, RiEyeOffFill } from "@remixicon/react";
 import { ChatState } from "../../Context/ChatProvider";
 import ChatWaveLogo from "../assets/ChatWaveLogo.png"
+import { API_URL } from "../config/api";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const Signup = () => {
       user = { name, email, password, profilePicture };
     }
     try {
-      const {data} = await axios.post("http://127.0.0.1:3000/api/user/signup", user);
+      const {data} = await axios.post(`${API_URL}/api/user/signup`, user);
       localStorage.setItem('userInfo', JSON.stringify(data))
       setUser(data);
       navigate("/chats");
