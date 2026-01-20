@@ -10,6 +10,7 @@ import io from "socket.io-client";
 import Lottie from "react-lottie";
 import animationData from "../animations/typing.json";
 import { API_URL, SOCKET_URL } from "../config/api";
+import Loader from "./miscellaneous/Loader";
 
 const ENDPOINT = SOCKET_URL;
 let socket, selectedChatCompare;
@@ -44,7 +45,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoadingMessages(true);
       const { data } = await axios.get(
         `${API_URL}/api/message/${selectedChat._id}`,
-        config
+        config,
       );
       setMessages(data);
       setLoadingMessages(false);
@@ -73,7 +74,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             content: newMessage,
             chatId: selectedChat._id,
           },
-          config
+          config,
         );
         socket.emit("newMessage", data);
         setMessages([...messages, data]);
@@ -141,7 +142,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               <div className="flex">
                 <button
                   onClick={() => {
-                    setSelectedChat(null)
+                    setSelectedChat(null);
                     window.history.back();
                   }}
                   className="md:hidden mr-2 text-4xl cursor-pointer"
@@ -165,7 +166,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               <div className="flex">
                 <button
                   onClick={() => {
-                    setSelectedChat(null)
+                    setSelectedChat(null);
                     window.history.back();
                   }}
                   className="md:hidden mr-2 text-4xl cursor-pointer"
@@ -191,7 +192,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           )}
 
           <div className="h-[calc(77vh-4rem)] flex flex-col min-h-0 ">
-            <ScrollableChat messages={messages} />
+            {loadingMessages ? (
+              <Loader />
+            ) : (
+              <ScrollableChat messages={messages} />
+            )}
           </div>
 
           <div className="flex items-center justify-evenly h-20">
@@ -201,7 +206,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   <Lottie
                     options={defaultOptions}
                     width={70}
-                    style={{ marginBottom: "10px", marginTop:"10px", marginLeft: 0 }}
+                    style={{
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                      marginLeft: 0,
+                    }}
                   />
                 </div>
               ) : (
@@ -218,7 +227,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             <div>
               <button
                 onClick={sendMessage}
-                className={`border rounded-4xl  text-white ml-2 px-8 py-3 text-xl cursor-pointer ${!newMessage? "disabled bg-gray-400":"bg-green-700"}`}
+                className={`border rounded-4xl  text-white ml-2 px-8 py-3 text-xl cursor-pointer ${!newMessage ? "disabled bg-gray-400" : "bg-green-700"}`}
               >
                 Send
               </button>
